@@ -16,5 +16,6 @@ public class TaskResponse {
     private String taskName;
     private String taskText;
     private LocalDate deadline;
-
+    private Long lessonId;
+    private String lessonName;
 }

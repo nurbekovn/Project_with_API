@@ -16,9 +16,9 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query("select s from Student s where s.company=?1")
     List<Student> getStudentByCompanyId(Long courseId);
 
-    @Query("select new com.dto.response.StudentResponse(s.id , s.firstName," +
-            "s.lastName,s.phoneNumber,s.email,s.studyFormat) from Student s")
-    List<StudentResponse> getAllStudents();
+//    @Query("select new com.dto.response.StudentResponse(s.id , s.firstName," +
+//            "s.lastName,s.phoneNumber,s.email,s.studyFormat) from Student s")
+//    List<StudentResponse> getAllStudents();
 
 
     @Query("select count(s) from Student s where s.firstName =?1")
@@ -33,5 +33,9 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query("select count(s) from Student s where s.company.id = ?1")
     Long countStudentsByCompanyId(@Param("companyId") Long companyId);
 
+
+    @Query("select case when count(a)>0 then true else false end" +
+            " from User a where a.email =?1")
+    boolean existsByUserEmail(String email);
 
 }

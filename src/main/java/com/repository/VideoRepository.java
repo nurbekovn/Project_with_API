@@ -16,6 +16,6 @@ public interface VideoRepository extends JpaRepository<Video, Long> {
     List<Video> getVideoByLessonId(@Param("lessonId") Long lessonId);
 
     @Query("select new com.dto.response.VideoResponse(v.id," +
-            "v.videoName,v.link)from Video v")
+            "v.videoName,v.link ,v.lesson.id, v.lesson.lessonName)from Video v")
     List<VideoResponse> getAllVideos();
 }

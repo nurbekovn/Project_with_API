@@ -12,10 +12,4 @@ public class ExceptionResponse {
     private String message;
     private HttpStatus httpStatus;
     private String exceptionClassName;
-
-    public ExceptionResponse(String message, HttpStatus notFound, String simpleName, String message1, HttpStatus badRequest, String simpleName1) {
-        this.message = message;
-        this.exceptionClassName = getExceptionClassName();
-    }
-
 }

@@ -13,4 +13,5 @@ import lombok.Setter;
 public class LessonResponse {
     private Long id;
     private String lessonName;
+    private String courseName;
 }

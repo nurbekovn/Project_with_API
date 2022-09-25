@@ -11,7 +11,7 @@ import java.util.List;
 public interface LessonRepository extends JpaRepository<Lesson, Long > {
     List<Lesson> getLessonByCourseId(Long courseId);
 
-    @Query("select new com.dto.response.LessonResponse(l.id , l.lessonName )from Lesson l")
+    @Query("select new com.dto.response.LessonResponse(l.id , l.lessonName ,l.course.courseName)from Lesson l")
     List<LessonResponse> getAllLessons();
 
 }

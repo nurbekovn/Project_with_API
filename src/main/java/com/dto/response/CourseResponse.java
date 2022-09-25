@@ -17,6 +17,8 @@ public class CourseResponse {
     private String image;
     private String description;
     private LocalDate dateOfStart;
+    private String companyName;
+
 
 //    private Long countOfStudents;
 //    private String companyName;

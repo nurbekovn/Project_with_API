@@ -17,7 +17,8 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> findCoursesByCompanyId(Long id);
 
     @Query("select new com.dto.response.CourseResponse(c.id," +
-            "c.courseName,c.duration,c.image,c.description,c.dateOfStart) from Course c")
+            "c.courseName,c.duration,c.image,c.description,c.dateOfStart," +
+            "c.company.companyName) from Course c")
     List<CourseResponse> getAllCourses();
 
     @Query("select c from Course c where upper(c.courseName) like concat('%',:text, '%') ")

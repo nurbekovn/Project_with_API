@@ -39,6 +39,16 @@ public class CompanyService {
     public CompanyResponse updateCompanyById(Long id, CompanyRequest companyRequest) {
         Company company = companyRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(String.format("Company with =%s id not found", id)));
+        String companyName = company.getCompanyName();
+        String newCompanyName = companyRequest.getCompanyName();
+        if (newCompanyName != null && !newCompanyName.equals(companyName)) {
+            company.setCompanyName(newCompanyName);
+        }
+        String locatedCountry = company.getLocatedCountry();
+        String newLocatedCountry = companyRequest.getLocatedCountry();
+        if (newLocatedCountry != null && !newLocatedCountry.equals(locatedCountry)) {
+            company.setLocatedCountry(newLocatedCountry);
+        }
         Company company1 = update(company, companyRequest);
         return mapToResponse(company1);
 
@@ -58,6 +68,7 @@ public class CompanyService {
         return mapToResponse(company);
 
     }
+
 
     public List<CompanyResponse> getAllCompanies() {
         return companyRepository.getAllCompanies();

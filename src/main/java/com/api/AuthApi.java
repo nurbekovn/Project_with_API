@@ -1,26 +1,29 @@
 package com.api;
-
 import com.dto.requests.UserRequest;
 import com.dto.response.UserResponse;
 import com.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/user")
-@PreAuthorize("hasAnyAuthority('ADMIN')")
 @RequiredArgsConstructor
-public class UserController {
+@RequestMapping("/api/auth")
+public class AuthApi {
 
-    private final UserService service;
+    private final UserService userService;
 
-    @PostMapping
-    public UserResponse create(@RequestBody UserRequest request){
-        return service.create(request);
 
+    @PostMapping("/register")
+    public UserResponse register(@RequestBody UserRequest authRequest) {
+        return userService.create(authRequest);
+    }
+
+
+    @PostMapping("/login")
+    public UserResponse login(@RequestBody UserRequest request) {
+        return userService.login(request);
     }
 }

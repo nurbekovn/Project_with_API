@@ -1,67 +1,103 @@
 package com.jwt;
 
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.auth0.jwt.interfaces.JWTVerifier;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
 
 
 @Service
+@ConfigurationProperties(prefix = "jwt.token")
+@Getter
+@Setter
 public class JwtTokenUtil {
 
-    @Value("Java-6")
-    private String jwtSecret;
-    private final Long JWT_TOKEN_VALIDITY = 7 * 24 * 60 * 60 * 1000L;  // 1 week
+    //    @Value("Java-6")
+    private String secret;
 
-    private String createToken(Map<String, Object> claims, String subject) {
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setIssuedAt(new Date(System.currentTimeMillis()))  // дата выпуска Токена
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY)) // срок годности токена здесь 7 дней
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                .compact();
+    private String issuer;
+
+
+    private long expires;
+
+    public String generateToken(String email) {
+
+        Date expirationDate = Date.from(ZonedDateTime.now().plusDays(60).toInstant());
+
+        return JWT.create()
+                .withClaim("email", email)
+                .withIssuedAt(new Date())
+                .withIssuer(issuer)
+                .withExpiresAt(expirationDate)
+                .sign(Algorithm.HMAC256(secret));
     }
 
-    public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userDetails.getUsername());
+    // validate token
+    public String validateJWTToken(String jwt) {
+        DecodedJWT verify = getDecodedJWT(jwt);
+
+        return verify.getClaim("email").asString();
     }
 
-    public Date getExpirationDateFromToken(String token) {
-        return getClaimFromToken(token, Claims::getExpiration);
+    private DecodedJWT getDecodedJWT(String jwt) {
+        JWTVerifier jwtVerifier = JWT.require(Algorithm.
+                        HMAC256(secret))
+                .withIssuer(issuer)
+                .build();
+
+        return jwtVerifier.verify(jwt);
     }
 
-    private <T> T getClaimFromToken(String token, Function<Claims, T> function) {
-        final Claims claims = getClaimsFromToken(token);
-        return function.apply(claims);
+    public LocalDateTime getIssuedAt(String jwt) {
+        DecodedJWT decodedJWT = getDecodedJWT(jwt);
+
+        return LocalDateTime.ofInstant(
+                decodedJWT.getIssuedAt().toInstant(),
+                ZoneId.systemDefault()
+        );
     }
 
-    private Claims getClaimsFromToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(token)
-                .getBody();
-    }
 
-    private Boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
-    }
+    // I added two methods in WEB;
 
-    public String getUsernameFromToken(String token) {
-        return getClaimFromToken(token, Claims::getSubject);
-    }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username  = getUsernameFromToken(token);
-        return (username.equals(userDetails.getUsername())&& ! isTokenExpired(token));
-    }
+//    private Claims getAllClaimsFromToken(String token) {
+//            return Jwts.parser().setSigningKey(jwtSecret.getBytes(Charset.forName("UTF-8"))).
+//                    parseClaimsJws(token.replace("{", "").replace("}","")).getBody();
+//        }
+//
+//    private String doGenerateToken(Map<String, Object> claims, String subject) {
+//
+//            return Jwts.builder().
+//                    setClaims(claims).
+//                    setSubject(subject).
+//                    setIssuedAt(new Date(System.currentTimeMillis()))
+//                    .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+//                    .signWith(SignatureAlgorithm.HS512, jwtSecret.getBytes(Charset.forName("UTF-8"))).compact();
+//        }
+
+
+//
+//    private Boolean isTokenExpired(String token) {
+//        final Date expiration = getExpirationDateFromToken(token);
+//        return expiration.before(new Date());
+//    }
+//
+//    public String getUsernameFromToken(String token) {
+//        return getClaimFromToken(token, Claims::getSubject);
+//    }
+//
+//    public Boolean validateToken(String token, UserDetails userDetails) {
+//        final String username  = getUsernameFromToken(token);
+//        return (username.equals(userDetails.getUsername())&& ! isTokenExpired(token));
+//    }
 }

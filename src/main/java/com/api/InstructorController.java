@@ -3,6 +3,7 @@ package com.api;
 import com.dto.requests.InstructorRequest;
 import com.dto.response.InstructorResponse;
 import com.entities.Instructor;
+import com.responseView.InstructorResponseView;
 import com.services.InstructorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +18,7 @@ import java.util.List;
 
 public class InstructorController {
     private final InstructorService instructorService;
+
 
     @PostMapping
     public InstructorResponse saveInstructor(@RequestBody InstructorRequest instructorRequest) {
@@ -39,11 +41,29 @@ public class InstructorController {
         return instructorService.deleteInstructorById(id);
     }
 
-    @GetMapping
+//    @GetMapping
+//    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
+//    public List<InstructorResponse> getAllInstructors() {
+//        return instructorService.getAllInstructors();
+//    }
+
+
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    public List<InstructorResponse> getAllInstructors() {
-        return instructorService.getAllInstructors();
+    @GetMapping("/all")
+    public List<InstructorResponse> getAllInstructor() {
+        return instructorService.getAllInstructor();
     }
+
+
+    @GetMapping("/instructorPagination")
+    private InstructorResponseView getAllInstructorPagination(@RequestParam(name = "text", required = false)
+                                                              String text,
+                                                              @RequestParam int page ,
+                                                              @RequestParam int size) {
+        return instructorService.getAllInstructorPagination(text,page,size);
+    }
+
+
 
     @GetMapping("/{companyName}/count")
     public Long getCountOfInstructorsByCompanyName(@PathVariable String companyName) {
@@ -56,7 +76,7 @@ public class InstructorController {
         return instructorService.assignInstructorToCourse(instructorId,courseId);
     }
 
-    @PostMapping("/{instructorId}/{courseId}/as")
+    @PostMapping("/{instructorId}/{courseId}/asString")
     public String  assign(@PathVariable Long instructorId,
                           @PathVariable Long courseId) {
         return instructorService.assign(instructorId,courseId);

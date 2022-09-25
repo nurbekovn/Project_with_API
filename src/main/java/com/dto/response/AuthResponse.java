@@ -1,6 +1,6 @@
 package com.dto.response;
 
-import com.entities.Role;
+import com.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

@@ -10,4 +10,7 @@ import java.util.List;
 @Setter
 public class InstructorResponseView {
     List<InstructorResponse> instructorResponses;
+    private int currentPage;
+    private int totalPage;
+
 }

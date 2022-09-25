@@ -61,9 +61,11 @@ public class TaskService {
     public TaskResponse deleteTaskById(Long id) {
         Task task = taskRepo.findById(id).orElseThrow(
                 () -> new NotFoundException(String.format("Task with =%s id not found", id)));
+        String lessonName = task.getLesson().getLessonName();
+        Long lessonId = task.getLesson().getId();
         task.setLesson(null);
         taskRepo.delete(task);
-        return response(task);
+        return new TaskResponse(task.getId(), task.getTaskName(), task.getTaskText(), task.getDeadline(),lessonId,lessonName);
     }
 
     public List<TaskResponse> getAllTasks() {
@@ -76,6 +78,8 @@ public class TaskService {
         response.setTaskName(task.getTaskName());
         response.setTaskText(task.getTaskText());
         response.setDeadline(task.getDeadline());
+        response.setLessonId(task.getLesson().getId());
+        response.setLessonName(task.getLesson().getLessonName());
         return response;
     }
 }

@@ -11,11 +11,13 @@ public class StudentRequest {
 
     private String firstName;
     private String lastName;
-    private int phoneNumber;
+    private String phoneNumber;
     private String email;
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Study studyFormat;
+    private String password;
     private Long companyId;
+
 
 //    private String login;
 //    private String password;

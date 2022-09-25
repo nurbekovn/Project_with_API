@@ -1,5 +1,6 @@
 package com.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,10 +25,15 @@ public class Instructor {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
+//    private String password;
     @Column(name = "phone_number")
     private String phoneNumber;
     private String email;
     private String specialization;
+
+    @JsonIgnore
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    private User user;
 
     @ManyToMany(cascade = {MERGE, PERSIST, DETACH, REFRESH})
     @JoinTable

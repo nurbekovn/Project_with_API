@@ -1,4 +1,4 @@
-package com.config;
+package com.security;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -19,7 +19,7 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .components(new Components()
                         .addSecuritySchemes(API_KEY, apiKeySecuritySchema())) // define the apiKey SecuritySchema
-                .info(new Info().title("Peaksoft LMS"))
+                .info(new Info().title("Talent LMS"))
                 .security(Collections.singletonList(new SecurityRequirement().addList(API_KEY))); // then apply it. If you don't apply it will not be added to the header in cURL
     }
 

@@ -9,6 +9,7 @@ import com.repository.LessonRepository;
 import com.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 
@@ -27,20 +28,20 @@ public class VideoService {
         video.setLesson(lesson);
         lesson.addVideo(video);
         Video video1 = videoRepo.save(video);
-        return response(video1);
+        return mapToResponse(video1);
     }
 
-    public VideoResponse getVideoById(Long  id) {
+    public VideoResponse getVideoById(Long id) {
         Video video = videoRepo.findById(id).orElseThrow(
                 () -> new NotFoundException(String.format("Video with =%s id not found", id)));
-        return response(video);
+        return mapToResponse(video);
     }
 
-    public VideoResponse updateVideoById(Long id ,VideoRequest videoRequest) {
+    public VideoResponse updateVideoById(Long id, VideoRequest videoRequest) {
         Video video = videoRepo.findById(id).orElseThrow(
                 () -> new NotFoundException(String.format("Video with =%s id not found", id)));
         Video video1 = update(video, videoRequest);
-        return response(video1);
+        return mapToResponse(video1);
     }
 
     private Video update(Video video, VideoRequest videoRequest) {
@@ -56,20 +57,24 @@ public class VideoService {
     public VideoResponse deleteById(Long id) {
         Video video = videoRepo.findById(id).orElseThrow(
                 () -> new NotFoundException(String.format("Video with =%s id not found", id)));
+        Long lessonId = video.getLesson().getId();
+        String lessonName = video.getLesson().getLessonName();
         video.setLesson(null);
         videoRepo.delete(video);
-        return response(video);
+        return new VideoResponse(video.getId(), video.getVideoName(), video.getLink(), lessonId,lessonName);
     }
 
     public List<VideoResponse> getAllVideos() {
         return videoRepo.getAllVideos();
     }
 
-    public VideoResponse response(Video video) {
-        VideoResponse response= new VideoResponse();
+    public VideoResponse mapToResponse(Video video) {
+        VideoResponse response = new VideoResponse();
         response.setId(video.getId());
         response.setVideoName(video.getVideoName());
         response.setLink(video.getLink());
+        response.setLessonId(video.getLesson().getId());
+        response.setLessonName(video.getLesson().getLessonName());
         return response;
 
     }

@@ -1,21 +1,22 @@
-package com.dto.response;
+package com.dto.requests;
 
+import com.enums.Study;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+public class UserRegisterRequest {
 
-public class InstructorResponse {
-    private Long  id;
     private String firstName;
     private String lastName;
     private String phoneNumber;
+    private int age;
     private String email;
-    private String specialization;
-    private String  companyName;
+    private Study studyFormat;
+    private String password;
+
+
 }

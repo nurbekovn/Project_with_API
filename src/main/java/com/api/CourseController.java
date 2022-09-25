@@ -58,6 +58,6 @@ public class CourseController {
     @GetMapping("/{companyName}/count")
     public Long getCountOfCoursesByCompanyName(@PathVariable String companyName) {
         return courseService.getCountOfCoursesByCompanyName(companyName);
-    }
 
+    }
 }

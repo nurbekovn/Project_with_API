@@ -11,5 +11,7 @@ public class InstructorRequest {
     private String phoneNumber;
     private String email;
     private String specialization;
+    private String password;
     private Long companyId;
+
 }

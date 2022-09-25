@@ -1,6 +1,7 @@
 package com.entities;
 
 import com.enums.Study;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,12 +24,13 @@ public class Student {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
-    @Column(name = "phone_number")
-    private int phoneNumber;
-    private String email;
 
-    @Enumerated(value = EnumType.ORDINAL)
-//    @Column(name = "study_format")
+    @Column(name = "phone_number")
+    private String phoneNumber;
+    private String email;
+    private int age;
+
+    @Enumerated(value = EnumType.STRING)
     private Study studyFormat;
 
 
@@ -40,12 +42,34 @@ public class Student {
     @ManyToOne(cascade = {PERSIST,MERGE,REFRESH,DETACH})
     private Course course;
 
-    public Student(String firstName, String lastName, int phoneNumber, String email, Study studyFormat) {
+
+    @JsonIgnore
+    @OneToOne(cascade = ALL)
+    private User user ;
+
+
+    public Student(String firstName, String lastName, String phoneNumber,User user) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.studyFormat = studyFormat;
+        this.user = user;
     }
+
+
+
+//    public Student(UserRegisterRequest userRegisterRequest) {
+//        this.firstName = userRegisterRequest.getFirstName();
+//        this.lastName= userRegisterRequest.getLastName();
+//        this.age = userRegisterRequest.getAge();
+//        this.phoneNumber = userRegisterRequest.getPhoneNumber();
+//        this.studyFormat = userRegisterRequest.getStudyFormat();
+//
+//        User user1 = new User();
+//        user1.setEmail(userRegisterRequest.getEmail());
+//        user1.setPassword(userRegisterRequest.getPassword());
+//        user1.setRole(Role.STUDENT);
+//        this.user = user1;
+//    }
 
 }

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 
 @Service
@@ -79,10 +80,18 @@ public class CourseService {
     public CourseResponse deleteCourse(Long id) {
         Course course = courseRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(String.format("Course with =%s id not found", id)));
+        String companyName = course.getCompany().getCompanyName();
         course.setCompany(null);
         courseRepository.delete(course);
-        return response(course);
+        return new CourseResponse(
+                course.getId(), course.getCourseName(),
+                course.getDuration(), course.getImage(),
+                course.getDescription(),
+                course.getDateOfStart(),
+                companyName
+        );
     }
+
 
 
     public List<CourseResponse> getAllCourses(List<Course> courses) {
@@ -90,13 +99,13 @@ public class CourseService {
         for (Course course : courses) {
             responses.add(response(course));
         }
-            return responses;
+        return responses;
     }
 
-    public CourseResponseView getAllCoursesPagination(String text , int page , int size) {
+    public CourseResponseView getAllCoursesPagination(String text, int page, int size) {
         CourseResponseView courseResponseView = new CourseResponseView();
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("courseName"));
-        courseResponseView.setCourseResponses(getAllCourses(search(text,pageable)));
+        courseResponseView.setCourseResponses(getAllCourses(search(text, pageable)));
         return courseResponseView;
     }
 
@@ -117,6 +126,7 @@ public class CourseService {
         courseResponse.setDuration(course.getDuration());
         courseResponse.setImage(course.getImage());
         courseResponse.setDateOfStart(course.getDateOfStart());
+        courseResponse.setCompanyName(course.getCompany().getCompanyName());
         return courseResponse;
     }
 

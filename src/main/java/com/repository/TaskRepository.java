@@ -14,7 +14,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query("select t from Task t where t.lesson.id = :id")
     List<Task> getTaskByLessonId(@Param("id") Long id);
 
-    @Query("select new com.dto.response.TaskResponse(t.id,t.taskName,t.taskText,t.deadline)from Task t")
+    @Query("select new com.dto.response.TaskResponse(t.id,t.taskName,t.taskText,t.deadline," +
+            "t.lesson.id,t.lesson.lessonName)from Task t")
     List<TaskResponse> getAllTasks();
 
 }

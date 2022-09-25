@@ -58,9 +58,10 @@ public class LessonService {
     public LessonResponse deleteLessonById(Long id) {
         Lesson lesson = lessonRepo.findById(id).orElseThrow(
                 () -> new NotFoundException(String.format("Lesson with = %s id not found", id)));
+        String courseName = lesson.getCourse().getCourseName();
         lesson.setCourse(null);
         lessonRepo.delete(lesson);
-        return response(lesson);
+        return new LessonResponse(lesson.getId(), lesson.getLessonName(), courseName);
     }
 
     public List<LessonResponse> getAllLessons() {
@@ -71,6 +72,7 @@ public class LessonService {
         LessonResponse response = new LessonResponse();
         response.setId(lesson.getId());
         response.setLessonName(lesson.getLessonName());
+        response.setCourseName(lesson.getCourse().getCourseName());
         return response;
     }
 }

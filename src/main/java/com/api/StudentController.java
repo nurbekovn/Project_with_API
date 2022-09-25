@@ -44,8 +44,8 @@ public class StudentController {
 
     @GetMapping("/all")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    public List<StudentResponse> getAllStudents() {
-        return studentService.getAllStudents();
+    public List<StudentResponse> getAllStudent() {
+        return studentService.getAllStudent();
     }
 
 
